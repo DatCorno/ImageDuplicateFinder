@@ -1,11 +1,19 @@
-#include "include\mainwindow.h"
-#include <QApplication>
+#include "duplicatefinder.h"
+#include <list>
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    DuplicateFinder finder("samples/");
 
-    return a.exec();
+	list<Duplicate> duplicates = finder.find_duplicates();
+	
+	foreach(Duplicate dup, duplicates)
+		cout << dup.original << endl << dup.duplicate << endl;
+		
+	char cr;
+	cin >> cr
+	
+    return 0;
 }

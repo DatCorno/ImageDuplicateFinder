@@ -1,4 +1,4 @@
-#include "include/duplicatefinder.h"
+#include "duplicatefinder.h"
 
 using namespace std;
 using namespace cv;

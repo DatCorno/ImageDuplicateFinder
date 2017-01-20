@@ -1,32 +1,31 @@
-#include "include/directoryexplorer.h"
+#include "directoryexplorer.h"
 
 using namespace std;
+namespace fs = std::experimental::filesystem;
 
 unordered_set<string> get_all_images(const string& root)
 {
-    return get_all_images(QDir(QString(root.c_str())), unordered_set<string>());
+    return get_all_images(fs::path(root), unordered_set<string>());
 }
 
-unordered_set<string> get_all_images(const QDir& dir, unordered_set<std::string>& paths)
+unordered_set<string> get_all_images(const fs::path& top_level_dir, unordered_set<std::string>& paths)
 {
-    QFileInfoList infos = dir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-
-    foreach(QFileInfo info, infos)
+    for(auto& dir_entry: fs::recursive_directory_iterator(top_level_dir))
     {
-        if(info.isDir())
-            return get_all_images(info.absoluteFilePath(), paths);
+        if(fs::is_directory(dir_entry.status())
+            continue;
 
-        else if(info.isFile())
+        else if(fs::is_regular_file(dir_entry.status()))
         {
-            if(is_image(info.absoluteFilePath().toStdString()))
-                paths.insert(info.absoluteFilePath().toStdString());
+            if(is_image(dir_entry.path())
+                paths.insert(dir_entry.path());
         }
     }
 
     return paths;
 }
 
-bool is_image(const std::string& path)
+bool is_image(const fs::path& file_path)
 {
     ifstream stream(path);
     bool is_image = false;
